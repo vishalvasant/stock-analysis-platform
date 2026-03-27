@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from database import engine, get_db
 from models import Base
 from routers import auth
+from auth import get_current_user
 
 # Create tables (for development; in production use migrations)
 Base.metadata.create_all(bind=engine)
@@ -20,5 +21,5 @@ def health_check():
     return {"status": "healthy"}
 
 @app.get("/protected")
-def protected_route(current_user: dict = Depends(auth.get_current_user)):
+def protected_route(current_user: dict = Depends(get_current_user)):
     return {"message": f"Hello {current_user.username}"}

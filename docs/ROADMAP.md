@@ -5,31 +5,37 @@
 - Docker Compose for PostgreSQL set up
 - Basic README added
 
-## Phase 2: Backend Core - Database and API Services 🚧 (In Progress)
+## Phase 2: Backend Core - Database and API Services ✅ (Completed)
 - PostgreSQL running via Docker
-- API Service: Basic FastAPI app created and running on port 8000
-- Next: Design DB schema, add models, auth, Upstox integration
+- API Service: FastAPI with auth (JWT), database models, migrations
+- Alembic set up for future migrations
+- Endpoints: /auth/register, /auth/login, /protected
 
-## Phase 3: Microservices Development
+## Phase 3: Web App Base ✅ (Completed)
+- React app created with login/register forms
+- Axios for API calls
+- Basic dashboard after login
+
+## Phase 4: Microservices Development
 - **ML Service**: Python with scikit-learn for analysis
 - **News Fetch Service**: Python for news fetching and sentiment (NLTK/VADER)
 - **Websocket Service**: Python with websockets library for real-time streaming
 - Integrate all via REST
 
-## Phase 4: Web App (React)
-- Set up React app
-- Dashboard, charts, news integration
+## Phase 5: Web App Enhancements
+- Add stock analysis components, charts, news integration
 - Connect to APIs/WebSockets
 
-## Phase 5: Mobile App (React Native)
+## Phase 6: Mobile App (React Native)
 - Set up React Native
 - Mirror web features
 - Add notifications
 
-## Phase 6: Integration and Deployment
+## Phase 7: Integration and Deployment
 - E2E testing
 - Local deployment with Docker
 - Monitoring setup
 
 ## Next Steps
-- Discuss DB schema and Upstox API integration details for API service
+- Test auth flow: Register a user, login, access protected route
+- Start ML Service or discuss next microservice
