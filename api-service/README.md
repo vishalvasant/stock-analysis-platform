@@ -45,6 +45,15 @@ See [API_ENDPOINTS.md](./API_ENDPOINTS.md) for complete endpoint documentation.
 - `POST /auth/login` - Login and get JWT token
 - `GET /protected` - Protected route (requires auth token)
 
+## Default Admin User
+
+The API automatically seeds an admin user on startup:
+- **Username**: `admin`
+- **Email**: `admin@example.com`
+- **Password**: `admin123`
+
+You can use these credentials to test the login functionality.
+
 ## Authentication
 
 1. Register a user with `/auth/register`
