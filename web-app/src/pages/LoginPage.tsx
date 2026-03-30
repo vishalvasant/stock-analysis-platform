@@ -16,35 +16,35 @@ import { LoginCredentials } from '../types';
 
 // SVG Icons
 const UserIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
     <circle cx="12" cy="7" r="4" />
   </svg>
 );
 
 const LockIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
   </svg>
 );
 
 const EyeIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
     <circle cx="12" cy="12" r="3" />
   </svg>
 );
 
 const EyeOffIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
     <line x1="1" y1="1" x2="23" y2="23" />
   </svg>
 );
 
 const TrendingUpIcon = () => (
-  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
     <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
     <polyline points="17 6 23 6 23 12" />
   </svg>
@@ -70,6 +70,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   const [showPassword, setShowPassword] = useState(false);
 
   const validateForm = (): boolean => {
+    console.log('[LoginPage] Validating form:', formData);
     const newErrors: Partial<LoginCredentials> = {};
 
     if (!formData.username) {
@@ -85,18 +86,24 @@ export const LoginPage: React.FC<LoginPageProps> = ({
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    const isValid = Object.keys(newErrors).length === 0;
+    console.log('[LoginPage] Form validation result:', isValid, newErrors);
+    return isValid;
   };
 
   const handleLogin = async (): Promise<void> => {
+    console.log('[LoginPage] handleLogin called');
     clearError();
 
     if (!validateForm()) {
+      console.log('[LoginPage] Form validation failed');
       return;
     }
 
+    console.log('[LoginPage] Form valid, calling login...');
     try {
       await login(formData);
+      console.log('[LoginPage] Login successful, calling onLoginSuccess');
 
       toast.show({
         title: 'Welcome Back!',
@@ -106,7 +113,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       });
 
       onLoginSuccess?.();
+      console.log('[LoginPage] onLoginSuccess called');
     } catch (err) {
+      console.log('[LoginPage] Login error:', err);
       toast.show({
         title: 'Login Failed',
         description: error || 'Invalid credentials. Please try again.',
@@ -131,193 +140,261 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   };
 
   return (
-    <Center
-      flex={1}
-      minH="100vh"
+    <div
       style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        padding: '20px',
+        position: 'relative',
+        overflow: 'hidden',
       }}
-      px={4}
-      py={8}
     >
       {/* Background Decorations */}
-      <Box
-        position="absolute"
-        top="10%"
-        left="5%"
-        width="300px"
-        height="300px"
-        borderRadius="full"
-        bg="rgba(255,255,255,0.08)"
-        style={{ filter: 'blur(80px)' }}
+      <div
+        style={{
+          position: 'absolute',
+          top: '10%',
+          left: '5%',
+          width: '300px',
+          height: '300px',
+          borderRadius: '50%',
+          background: 'rgba(255,255,255,0.08)',
+          filter: 'blur(80px)',
+          zIndex: 0,
+        }}
       />
-      <Box
-        position="absolute"
-        bottom="5%"
-        right="5%"
-        width="250px"
-        height="250px"
-        borderRadius="full"
-        bg="rgba(255,255,255,0.06)"
-        style={{ filter: 'blur(60px)' }}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '5%',
+          right: '5%',
+          width: '250px',
+          height: '250px',
+          borderRadius: '50%',
+          background: 'rgba(255,255,255,0.06)',
+          filter: 'blur(60px)',
+          zIndex: 0,
+        }}
       />
 
-      <VStack space={6} width="100%" maxW="440px" alignItems="center" zIndex={1}>
+      {/* Main Container */}
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '400px',
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
         {/* Logo Header */}
-        <VStack space={3} alignItems="center" mb={2}>
-          <Box
-            bg="white"
-            p={4}
-            borderRadius="16px"
-            shadow="lg"
+        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '56px',
+              height: '56px',
+              backgroundColor: 'white',
+              borderRadius: '16px',
+              boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+              marginBottom: '16px',
+            }}
           >
-            <Box color="#667eea">
+            <span style={{ color: '#667eea' }}>
               <TrendingUpIcon />
-            </Box>
-          </Box>
-          <VStack space={1} alignItems="center">
-            <Heading size="xl" color="white" fontWeight="bold" letterSpacing="tight">
-              Stock Analysis
-            </Heading>
-            <Text color="rgba(255,255,255,0.85)" fontSize="sm" fontWeight="500">
-              Professional Trading Platform
-            </Text>
-          </VStack>
-        </VStack>
+            </span>
+          </div>
+          <h1
+            style={{
+              fontSize: '28px',
+              fontWeight: 700,
+              color: 'white',
+              margin: '0 0 4px 0',
+              letterSpacing: '-0.5px',
+            }}
+          >
+            Stock Analysis
+          </h1>
+          <p
+            style={{
+              fontSize: '14px',
+              color: 'rgba(255,255,255,0.85)',
+              margin: 0,
+              fontWeight: 500,
+            }}
+          >
+            Professional Trading Platform
+          </p>
+        </div>
 
-        {/* Main Card */}
-        <Box
-          width="100%"
-          bg="white"
-          borderRadius="24px"
-          p={8}
-          shadow="2xl"
+        {/* Card */}
+        <div
           style={{
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255,255,255,0.1)',
+            backgroundColor: 'white',
+            borderRadius: '20px',
+            padding: '32px',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
           }}
         >
-          <VStack space={6}>
-            {/* Card Header */}
-            <VStack space={1} alignItems="center">
-              <Heading size="lg" color="gray.800" fontWeight="bold">
-                Welcome Back
-              </Heading>
-              <Text color="gray.500" fontSize="sm">
-                Sign in to continue trading
-              </Text>
-            </VStack>
+          {/* Card Header */}
+          <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+            <h2
+              style={{
+                fontSize: '22px',
+                fontWeight: 700,
+                color: '#1a202c',
+                margin: '0 0 4px 0',
+              }}
+            >
+              Welcome Back
+            </h2>
+            <p
+              style={{
+                fontSize: '14px',
+                color: '#718096',
+                margin: 0,
+              }}
+            >
+              Sign in to continue trading
+            </p>
+          </div>
 
-            {/* Form */}
-            <VStack space={5}>
-              {/* Username */}
-              <FormControl isInvalid={!!errors.username}>
-                <FormControl.Label
-                  _text={{
-                    color: 'gray.700',
-                    fontWeight: '600',
-                    fontSize: 'sm',
-                    mb: 1.5,
+          {/* Form */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {/* Username */}
+            <div>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  color: '#4a5568',
+                  marginBottom: '6px',
+                }}
+              >
+                Username
+              </label>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: errors.username ? '2px solid #fc8181' : '2px solid #e2e8f0',
+                  borderRadius: '10px',
+                  padding: '12px 14px',
+                  backgroundColor: '#f7fafc',
+                  gap: '10px',
+                }}
+              >
+                <span style={{ color: errors.username ? '#fc8181' : '#a0aec0', flexShrink: 0 }}>
+                  <UserIcon />
+                </span>
+                <input
+                  type="text"
+                  placeholder="Enter username"
+                  value={formData.username}
+                  onChange={(e) => handleInputChange('username', e.target.value)}
+                  disabled={loading}
+                  style={{
+                    flex: 1,
+                    border: 'none',
+                    background: 'transparent',
+                    fontSize: '15px',
+                    color: '#2d3748',
+                    outline: 'none',
+                    padding: 0,
+                  }}
+                />
+              </div>
+              {errors.username && (
+                <p style={{ fontSize: '12px', color: '#e53e3e', margin: '4px 0 0 0' }}>
+                  {errors.username}
+                </p>
+              )}
+            </div>
+
+            {/* Password */}
+            <div>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  color: '#4a5568',
+                  marginBottom: '6px',
+                }}
+              >
+                Password
+              </label>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: errors.password ? '2px solid #fc8181' : '2px solid #e2e8f0',
+                  borderRadius: '10px',
+                  padding: '12px 14px',
+                  backgroundColor: '#f7fafc',
+                  gap: '10px',
+                }}
+              >
+                <span style={{ color: errors.password ? '#fc8181' : '#a0aec0', flexShrink: 0 }}>
+                  <LockIcon />
+                </span>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Enter password"
+                  value={formData.password}
+                  onChange={(e) => handleInputChange('password', e.target.value)}
+                  disabled={loading}
+                  style={{
+                    flex: 1,
+                    border: 'none',
+                    background: 'transparent',
+                    fontSize: '15px',
+                    color: '#2d3748',
+                    outline: 'none',
+                    padding: 0,
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: 0,
+                    color: '#a0aec0',
+                    flexShrink: 0,
                   }}
                 >
-                  Username
-                </FormControl.Label>
-                <HStack
-                  alignItems="center"
-                  borderWidth={1.5}
-                  borderColor={errors.username ? 'red.400' : 'gray.200'}
-                  borderRadius="14px"
-                  px={4}
-                  py={3.5}
-                  bg="gray.50"
-                  space={3}
-                >
-                  <Box color={errors.username ? 'red.400' : 'gray.400'}>
-                    <UserIcon />
-                  </Box>
-                  <Input
-                    flex={1}
-                    type="text"
-                    placeholder="Enter username"
-                    value={formData.username}
-                    onChangeText={(value: string) => handleInputChange('username', value)}
-                    isDisabled={loading}
-                    fontSize="md"
-                    borderWidth={0}
-                    bg="transparent"
-                    p={0}
-                    _focus={{ bg: 'transparent' }}
-                  />
-                </HStack>
-                {errors.username && (
-                  <Text color="red.500" fontSize="xs" mt={1} ml={1}>
-                    {errors.username}
-                  </Text>
-                )}
-              </FormControl>
+                  {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+                </button>
+              </div>
+              {errors.password && (
+                <p style={{ fontSize: '12px', color: '#e53e3e', margin: '4px 0 0 0' }}>
+                  {errors.password}
+                </p>
+              )}
+            </div>
 
-              {/* Password */}
-              <FormControl isInvalid={!!errors.password}>
-                <FormControl.Label
-                  _text={{
-                    color: 'gray.700',
-                    fontWeight: '600',
-                    fontSize: 'sm',
-                    mb: 1.5,
-                  }}
-                >
-                  Password
-                </FormControl.Label>
-                <HStack
-                  alignItems="center"
-                  borderWidth={1.5}
-                  borderColor={errors.password ? 'red.400' : 'gray.200'}
-                  borderRadius="14px"
-                  px={4}
-                  py={3.5}
-                  bg="gray.50"
-                  space={3}
-                >
-                  <Box color={errors.password ? 'red.400' : 'gray.400'}>
-                    <LockIcon />
-                  </Box>
-                  <Input
-                    flex={1}
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Enter password"
-                    value={formData.password}
-                    onChangeText={(value: string) => handleInputChange('password', value)}
-                    isDisabled={loading}
-                    fontSize="md"
-                    borderWidth={0}
-                    bg="transparent"
-                    p={0}
-                    _focus={{ bg: 'transparent' }}
-                  />
-                  <Pressable onPress={() => setShowPassword(!showPassword)}>
-                    <Box color="gray.400" style={{ cursor: 'pointer' }}>
-                      {showPassword ? <EyeOffIcon /> : <EyeIcon />}
-                    </Box>
-                  </Pressable>
-                </HStack>
-                {errors.password && (
-                  <Text color="red.500" fontSize="xs" mt={1} ml={1}>
-                    {errors.password}
-                  </Text>
-                )}
-              </FormControl>
-
-              {/* Forgot Password */}
-              <HStack justifyContent="flex-end">
-                <Text
-                  color="#667eea"
-                  fontSize="sm"
-                  fontWeight="600"
-                  style={{ cursor: 'pointer' }}
-                >
-                  Forgot Password?
-                </Text>
-              </HStack>
-            </VStack>
+            {/* Forgot Password */}
+            <div style={{ textAlign: 'right' }}>
+              <a
+                href="#"
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  color: '#667eea',
+                  textDecoration: 'none',
+                }}
+              >
+                Forgot Password?
+              </a>
+            </div>
 
             {/* Sign In Button */}
             <button
@@ -326,24 +403,25 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               disabled={loading}
               style={{
                 width: '100%',
-                padding: '16px 24px',
-                borderRadius: '14px',
+                padding: '14px',
+                borderRadius: '10px',
                 border: 'none',
                 background: loading
                   ? '#a0aec0'
                   : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 color: 'white',
-                fontSize: '16px',
-                fontWeight: '600',
+                fontSize: '15px',
+                fontWeight: 600,
                 cursor: loading ? 'not-allowed' : 'pointer',
-                transition: 'all 0.3s ease',
+                transition: 'all 0.2s',
                 boxShadow: loading
                   ? 'none'
                   : '0 4px 14px 0 rgba(102, 126, 234, 0.39)',
+                marginTop: '4px',
               }}
               onMouseEnter={(e) => {
                 if (!loading) {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
                   e.currentTarget.style.boxShadow = '0 6px 20px 0 rgba(102, 126, 234, 0.5)';
                 }
               }}
@@ -358,22 +436,27 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             </button>
 
             {/* Divider */}
-            <HStack alignItems="center" space={3}>
-              <Box flex={1} height="1px" bg="gray.200" />
-              <Text color="gray.400" fontSize="sm">
-                or
-              </Text>
-              <Box flex={1} height="1px" bg="gray.200" />
-            </HStack>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                marginTop: '4px',
+              }}
+            >
+              <div style={{ flex: 1, height: '1px', backgroundColor: '#e2e8f0' }} />
+              <span style={{ fontSize: '13px', color: '#a0aec0' }}>or</span>
+              <div style={{ flex: 1, height: '1px', backgroundColor: '#e2e8f0' }} />
+            </div>
 
             {/* Social Login */}
-            <HStack space={3} justifyContent="center">
+            <div style={{ display: 'flex', gap: '12px' }}>
               <button
                 type="button"
                 style={{
                   flex: 1,
                   padding: '12px',
-                  borderRadius: '12px',
+                  borderRadius: '10px',
                   border: '1.5px solid #e2e8f0',
                   backgroundColor: 'white',
                   cursor: 'pointer',
@@ -391,7 +474,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                   e.currentTarget.style.borderColor = '#e2e8f0';
                 }}
               >
-                <svg width="20" height="20" viewBox="0 0 24 24">
+                <svg width="18" height="18" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
                   <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
                   <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
@@ -403,7 +486,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                 style={{
                   flex: 1,
                   padding: '12px',
-                  borderRadius: '12px',
+                  borderRadius: '10px',
                   border: '1.5px solid #e2e8f0',
                   backgroundColor: 'white',
                   cursor: 'pointer',
@@ -421,36 +504,54 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                   e.currentTarget.style.borderColor = '#e2e8f0';
                 }}
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                 </svg>
               </button>
-            </HStack>
+            </div>
 
             {/* Sign Up Link */}
-            <HStack justifyContent="center" space={1} pt={2}>
-              <Text color="gray.500" fontSize="sm">
-                Don't have an account?
-              </Text>
-              <Text
-                color="#667eea"
-                fontSize="sm"
-                fontWeight="bold"
-                style={{ cursor: 'pointer' }}
+            <div
+              style={{
+                textAlign: 'center',
+                marginTop: '8px',
+              }}
+            >
+              <span style={{ fontSize: '14px', color: '#718096' }}>
+                Don't have an account?{' '}
+              </span>
+              <button
+                type="button"
                 onClick={onSwitchToRegister}
+                style={{
+                  fontSize: '14px',
+                  fontWeight: 700,
+                  color: '#667eea',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: 0,
+                }}
               >
                 Sign up
-              </Text>
-            </HStack>
-          </VStack>
-        </Box>
+              </button>
+            </div>
+          </div>
+        </div>
 
         {/* Footer */}
-        <Text color="rgba(255,255,255,0.7)" fontSize="xs" textAlign="center">
+        <p
+          style={{
+            textAlign: 'center',
+            fontSize: '12px',
+            color: 'rgba(255,255,255,0.7)',
+            margin: '16px 0 0 0',
+          }}
+        >
           © 2024 Stock Analysis Platform. All rights reserved.
-        </Text>
-      </VStack>
-    </Center>
+        </p>
+      </div>
+    </div>
   );
 };
 
