@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from database import engine, get_db, SessionLocal
 from models import Base, User as UserModel
-from routers import auth
+from routers import auth, news
 from auth import get_current_user, get_password_hash
 from schemas import MessageResponse, HealthResponse, User as UserSchema
 
@@ -29,6 +29,7 @@ app.add_middleware(
 )
 
 app.include_router(auth.router)
+app.include_router(news.router)
 
 @app.on_event("startup")
 def seed_admin_user():

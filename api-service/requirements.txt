@@ -10,3 +10,6 @@ email-validator==2.3.0
 python-multipart==0.0.20
 bcrypt==5.0.0
 fastapi-cors==0.0.6
+beautifulsoup4==4.12.2
+requests==2.31.0
+lxml==4.9.3
