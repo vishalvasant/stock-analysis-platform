@@ -46,8 +46,18 @@ const PackageIcon = () => (
   </svg>
 );
 
+const NewspaperIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2" />
+    <path d="M18 14h-8" />
+    <path d="M18 18h-8" />
+    <path d="M18 10h-8" />
+  </svg>
+);
+
 interface DashboardPageProps {
   onLogout?: () => void;
+  onSwitchToNews?: () => void;
 }
 
 interface StockData {
@@ -59,7 +69,7 @@ interface StockData {
   low: number;
 }
 
-export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
+export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout, onSwitchToNews }) => {
   const { user, logout } = useAuth();
 
   const [stocks, setStocks] = useState<StockData[]>([]);
@@ -152,33 +162,61 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onLogout }) => {
             </div>
           </div>
 
-          {/* Logout Button */}
-          <button
-            onClick={handleLogout}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '10px 18px',
-              backgroundColor: 'rgba(255,255,255,0.15)',
-              border: '1px solid rgba(255,255,255,0.2)',
-              borderRadius: '8px',
-              color: 'white',
-              fontSize: '14px',
-              fontWeight: 500,
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.25)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.15)';
-            }}
-          >
-            <LogoutIcon />
-            Logout
-          </button>
+          {/* Navigation Buttons */}
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <button
+              onClick={onSwitchToNews}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '10px 18px',
+                backgroundColor: 'rgba(255,255,255,0.15)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                borderRadius: '8px',
+                color: 'white',
+                fontSize: '14px',
+                fontWeight: 500,
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.25)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.15)';
+              }}
+            >
+              <NewspaperIcon />
+              News
+            </button>
+            <button
+              onClick={handleLogout}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '10px 18px',
+                backgroundColor: 'rgba(255,255,255,0.15)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                borderRadius: '8px',
+                color: 'white',
+                fontSize: '14px',
+                fontWeight: 500,
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.25)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.15)';
+              }}
+            >
+              <LogoutIcon />
+              Logout
+            </button>
+          </div>
         </div>
       </div>
 

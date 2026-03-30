@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { NativeBaseProvider, Box, Center, Spinner } from 'native-base';
 import { customTheme } from './theme';
 import { AuthProvider } from './contexts/AuthContext';
-import { LoginPage, RegisterPage, DashboardPage } from './pages';
+import { LoginPage, RegisterPage, DashboardPage, NewsPage } from './pages';
 import { authService } from './services/authService';
 
-type PageType = 'login' | 'register' | 'dashboard';
+type PageType = 'login' | 'register' | 'dashboard' | 'news';
 
 /**
  * Main App Component
@@ -36,6 +36,14 @@ function AppContent() {
 
   const handleLogout = () => {
     setCurrentPage('login');
+  };
+
+  const handleSwitchToNews = () => {
+    setCurrentPage('news');
+  };
+
+  const handleSwitchToDashboard = () => {
+    setCurrentPage('dashboard');
   };
 
   const handleSwitchToRegister = () => {
@@ -74,7 +82,16 @@ function AppContent() {
         />
       )}
       {currentPage === 'dashboard' && (
-        <DashboardPage onLogout={handleLogout} />
+        <DashboardPage 
+          onLogout={handleLogout} 
+          onSwitchToNews={handleSwitchToNews}
+        />
+      )}
+      {currentPage === 'news' && (
+        <NewsPage 
+          onLogout={handleLogout}
+          onBackToDashboard={handleSwitchToDashboard}
+        />
       )}
     </Box>
   );
