@@ -43,20 +43,51 @@ class TheHinduScraper(NewsScraper):
             
             soup = BeautifulSoup(response.content, 'html.parser')
             articles = []
+            seen_urls = set()
             
-            # The Hindu uses different layouts, try multiple selectors
-            # Try main story sections
-            story_elements = soup.find_all('div', class_=['story-card', 'Other-Story', 'story'])[:limit]
+            # Find all links containing business articles
+            all_links = soup.find_all('a', href=True)
             
-            if not story_elements:
-                # Fallback: try to find any article links
-                story_elements = soup.find_all('a', href=True)
-                story_elements = [el for el in story_elements if '/business/' in el.get('href', '')][:limit]
-            
-            for element in story_elements:
-                article = self._parse_article(element)
-                if article and article.get('title'):
+            for link in all_links:
+                href = link.get('href', '')
+                
+                # Filter for business article URLs
+                if '/business/' in href and '/article' in href:
+                    # Make URL absolute
+                    if href.startswith('/'):
+                        full_url = f"{self.BASE_URL}{href}"
+                    elif href.startswith('http'):
+                        full_url = href
+                    else:
+                        full_url = f"{self.BASE_URL}/{href}"
+                    
+                    # Skip duplicates
+                    if full_url in seen_urls:
+                        continue
+                    seen_urls.add(full_url)
+                    
+                    # Get title
+                    title = link.get_text(strip=True)
+                    
+                    # Skip if no valid title
+                    if not title or len(title) < 15:
+                        continue
+                    
+                    # Clean up title
+                    title = title.replace('\n', ' ').replace('\t', ' ')
+                    
+                    article = {
+                        'title': title,
+                        'summary': '',
+                        'url': full_url,
+                        'source': 'the_hindu',
+                        'category': self._detect_category(href),
+                        'published_at': None,
+                        'content': ''
+                    }
+                    
                     articles.append(article)
+                    
                     if len(articles) >= limit:
                         break
             
@@ -69,6 +100,19 @@ class TheHinduScraper(NewsScraper):
         except Exception as e:
             logger.error(f"Unexpected error: {str(e)}")
             return []
+    
+    def _detect_category(self, url: str) -> str:
+        """Detect news category from URL"""
+        if '/markets/' in url:
+            return 'markets'
+        elif '/industry/' in url:
+            return 'industry'
+        elif '/economy/' in url:
+            return 'economy'
+        elif '/agri-business/' in url:
+            return 'agri-business'
+        else:
+            return 'business'
     
     def _parse_article(self, element) -> Optional[Dict]:
         """Parse a single article element"""
